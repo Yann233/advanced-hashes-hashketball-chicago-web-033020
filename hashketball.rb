@@ -2,58 +2,11 @@
 #https://www.youtube.com/watch?v=5R7K2TwxJiw
 def game_hash
   {
-    away: { team_name: 'Charlotte Hornets',
-      colors: %w[Turquoise Purple],
-      players: [
-        { player_name: 'Jeff Adrien',
-          number: 4,
-          shoe: 18,
-          points: 10,
-          rebounds: 1,
-          assists: 1,
-          steals: 2,
-          blocks: 7,
-          slam_dunks: 2 },
-        { player_name: 'Bismack Biyombo',
-          number: 0,
-          shoe: 16,
-          points: 12,
-          rebounds: 4,
-          assists: 7,
-          steals: 22,
-          blocks: 15,
-          slam_dunks: 10 },
-        { player_name: 'DeSagna Diop',
-          number: 2,
-          shoe: 14,
-          points: 24,
-          rebounds: 12,
-          assists: 12,
-          steals: 4,
-          blocks: 5,
-          slam_dunks: 5 },
-        { player_name: 'Ben Gordon',
-          number: 8,
-          shoe: 15,
-          points: 33,
-          rebounds: 3,
-          assists: 2,
-          steals: 1,
-          blocks: 1,
-          slam_dunks: 0 },
-        { player_name: 'Kemba Walker',
-          number: 33,
-          shoe: 15,
-          points: 6,
-          rebounds: 12,
-          assists: 12,
-          steals: 7,
-          blocks: 5,
-          slam_dunks: 12 }
-            ] },
-    home: { team_name: 'Brooklyn Nets',
+      home: {
+      team_name: 'Brooklyn Nets',
       colors: %w[Black White],
-      players: [
+      players:
+      [
         { player_name: 'Alan Anderson',
           number: 0,
           shoe: 16,
@@ -99,52 +52,103 @@ def game_hash
           steals: 4,
           blocks: 11,
           slam_dunks: 1 }
-      ] }
+      ]
+    },
+    away: {
+      team_name: 'Charlotte Hornets',
+      colors: %w[Turquoise Purple],
+      players:
+      [
+        { player_name: 'Jeff Adrien',
+          number: 4,
+          shoe: 18,
+          points: 10,
+          rebounds: 1,
+          assists: 1,
+          steals: 2,
+          blocks: 7,
+          slam_dunks: 2 },
+        { player_name: 'Bismack Biyombo',
+          number: 0,
+          shoe: 16,
+          points: 12,
+          rebounds: 4,
+          assists: 7,
+          steals: 22,
+          blocks: 15,
+          slam_dunks: 10 },
+        { player_name: 'DeSagna Diop',
+          number: 2,
+          shoe: 14,
+          points: 24,
+          rebounds: 12,
+          assists: 12,
+          steals: 4,
+          blocks: 5,
+          slam_dunks: 5 },
+        { player_name: 'Ben Gordon',
+          number: 8,
+          shoe: 15,
+          points: 33,
+          rebounds: 3,
+          assists: 2,
+          steals: 1,
+          blocks: 1,
+          slam_dunks: 0 },
+        { player_name: 'Kemba Walker',
+          number: 33,
+          shoe: 15,
+          points: 6,
+          rebounds: 12,
+          assists: 12,
+          steals: 7,
+          blocks: 5,
+          slam_dunks: 12 }
+            ]
+          }
   }
 end
 ######################
-=begin   def num_points_scored(players_name)
-    game_hash.each do |place, team|
-      tean.each do |attribute,data|
-        if attribute == :players
-          data.each do |player|
-            if player[:player_name]==player_name
-              return player[:points]
-            end
-          end
-        end
-      end
-    end
-  end
-=end
-#require 'pry'
-
-def num_points_scored(player_search)
+#access all players to get points
+#to iterate through top level keys
+def num_points_scored(player_name)
   game_hash.each do |team, team_info|
     team_info[:players].each do |player|
-      if player[:player_name] == player_search
+      if player[:player_name] == player_name
         return player[:points]
       end
     end
   end
 end
 #####################################
-def shoe_size(name)
+def shoe_size(player_name)
   game_hash.each do |team, team_info|
     team_info[:players].each do |player|
-      if player[:player_name] == name
+      if player[:player_name] == player_name
         return player[:shoe]
       end
     end
   end
 end
 ####################################3
-def team_colors(team_input)
-  if team_input.downcase == "charlotte hornets"
-    return game_hash[:away][:colors]
-  else return game_hash[:home][:colors]
+=begin
+def team_colors(team_name)
+  if team_name.downcase == "brooklyn nets"
+    return game_hash[:home][:colors]
+  else return game_hash[:away][:colors]
   end
 end
+=end
+##############
+
+def team_colors(team_name)
+  game_hash.each do |team, team_info|
+    if team_info[:team_name] == team_name
+      return team_info[:colors]
+    end
+  end
+end
+
 ###################################
 def team_names
   game_hash.map do |team, team_info|
@@ -152,29 +156,29 @@ def team_names
   end
 end
 ###############################
-def player_numbers(input)
-  output = []
+def player_numbers(team_name)
+  result = []
   game_hash.each do |team, team_info|
-    if team_info[:team_name] == input
-      team_info.each do |key, value|
-        if key == :players
-          value.each do |player|
-          output.push(player[:number])
+    if team_info[:team_name] == team_name
+      team_info.each do |attribute, info|
+        if attribute == :players
+          info.each do |player|
+          result<<player[:number]
           end
         end
       end
     end
   end
-  return output
+  result
 end
 ##########################################
-def player_stats(input)
+def player_stats(player_name)
   game_hash.each do |team, team_info|
-    team_info.each do |key, value|
-      if key == :players
-        value.each do |player|
-          if input == player[:player_name]
-            player.delete(:player_name) # having player name inside the hash was a bad idea!
+    team_info.each do |attribute, info|
+      if attribute == :players
+        info.each do |player|
+          if player_name == player[:player_name]
+            player.delete(:player_name)
             return player
           end
         end
